@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="theme-color" content="#F5EFE3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#201C16" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Engawa</title>
+<style>
+/* ============ Paleta washi / madera / engawa ============ */
+:root{
+  --paper:#F5EFE3;
+  --paper-2:#EFE7D6;
+  --card:#FBF7EE;
+  --ink:#3B342A;
+  --ink-soft:#6E6353;
+  --ink-faint:#A2947E;
+  --line:#E3D9C6;
+  --wood:#8A6F4D;
+  --wood-deep:#6E5738;
+  --moss:#6F7F5C;
+  --moss-pale:#E8ECDF;
+  --indigo:#5A6B7A;
+  --indigo-pale:#E3E8EC;
+  --shadow:0 1px 2px rgba(59,52,42,0.06), 0 4px 16px rgba(59,52,42,0.05);
+  --radius:16px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#201C16;
+    --paper-2:#262119;
+    --card:#2A251D;
+    --ink:#EAE2D2;
+    --ink-soft:#BDB09A;
+    --ink-faint:#7E7360;
+    --line:#3A3428;
+    --wood:#C9A876;
+    --wood-deep:#DDBE8E;
+    --moss:#93A57F;
+    --moss-pale:#333A2B;
+    --indigo:#8A9BAB;
+    --indigo-pale:#2A3138;
+    --shadow:0 1px 2px rgba(0,0,0,0.25), 0 4px 16px rgba(0,0,0,0.2);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#201C16;
+  --paper-2:#262119;
+  --card:#2A251D;
+  --ink:#EAE2D2;
+  --ink-soft:#BDB09A;
+  --ink-faint:#7E7360;
+  --line:#3A3428;
+  --wood:#C9A876;
+  --wood-deep:#DDBE8E;
+  --moss:#93A57F;
+  --moss-pale:#333A2B;
+  --indigo:#8A9BAB;
+  --indigo-pale:#2A3138;
+  --shadow:0 1px 2px rgba(0,0,0,0.25), 0 4px 16px rgba(0,0,0,0.2);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  font-size:17px;
+  line-height:1.55;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  transition:background 0.5s ease, color 0.5s ease;
+}
+.wrap{max-width:560px;margin:0 auto;padding:24px 20px 120px;}
+
+h1,h2,h3{font-weight:600;letter-spacing:-0.01em;margin:0;}
+button{font-family:inherit;cursor:pointer;}
+input,textarea,select{font-family:inherit;font-size:inherit;color:var(--ink);}
+
+/* ============ Cabecera ============ */
+header.top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.app-name{font-size:22px;color:var(--wood);letter-spacing:0.02em;}
+.today-date{font-size:13px;color:var(--ink-faint);font-style:italic;}
+
+.greeting{font-size:26px;margin:18px 0 4px;}
+.greeting-sub{color:var(--ink-soft);font-size:15px;margin:0 0 22px;}
+
+/* ============ Tarjetas ============ */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-bottom:16px;
+  box-shadow:var(--shadow);
+}
+.card h3{font-size:17px;margin-bottom:6px;}
+.card p{margin:0;color:var(--ink-soft);font-size:15px;}
+
+.card.invite{border-color:var(--wood);background:linear-gradient(160deg,var(--card),var(--paper-2));}
+.card.invite .invite-tag{font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--wood);margin-bottom:8px;}
+
+.card-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+
+/* ============ Botones ============ */
+.btn{
+  border:none;border-radius:12px;padding:12px 20px;font-size:16px;
+  transition:opacity 0.2s ease, transform 0.15s ease;
+}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:var(--wood);color:var(--paper);}
+.btn-primary:hover{opacity:0.9;}
+.btn-ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
+.btn-ghost:hover{background:var(--paper-2);}
+.btn-quiet{background:transparent;color:var(--ink-faint);border:none;padding:10px 12px;font-size:14px;}
+.btn-block{display:block;width:100%;text-align:center;}
+.btn-big{
+  padding:22px 20px;font-size:18px;border-radius:var(--radius);
+  background:var(--wood);color:var(--paper);border:none;width:100%;text-align:left;
+  box-shadow:var(--shadow);
+}
+.btn-big small{display:block;font-size:13px;opacity:0.8;margin-top:4px;font-weight:400;}
+
+/* ============ Vistas ============ */
+.view{display:none;animation:fadein 0.45s ease;}
+.view.active{display:block;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* ============ Navegación inferior ============ */
+nav.bottom{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  background:var(--card);border-top:1px solid var(--line);
+  display:flex;justify-content:space-around;align-items:flex-end;
+  padding:8px 8px calc(10px + env(safe-area-inset-bottom));
+}
+nav.bottom .nav-item{
+  background:none;border:none;color:var(--ink-faint);
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:11px;padding:4px 10px;border-radius:10px;flex:1;
+  transition:color 0.25s ease;
+}
+nav.bottom .nav-item.active{color:var(--wood);}
+nav.bottom .nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+
+.catch-btn{
+  background:var(--moss);border:none;color:var(--paper);
+  width:62px;height:62px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:-30px;flex:0 0 auto;
+  box-shadow:0 4px 14px rgba(59,52,42,0.22);
+  font-size:26px;line-height:1;
+  transition:transform 0.15s ease;
+}
+.catch-btn:active{transform:scale(0.94);}
+.catch-label{font-size:10px;color:var(--ink-faint);text-align:center;margin-top:4px;}
+.catch-wrap{display:flex;flex-direction:column;align-items:center;flex:0 0 auto;padding:0 6px;}
+
+/* ============ Escritura ============ */
+.write-surface{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px;box-shadow:var(--shadow);
+}
+.write-surface textarea{
+  width:100%;min-height:44vh;border:none;background:transparent;resize:vertical;
+  font-size:18px;line-height:1.7;outline:none;
+}
+.write-surface textarea::placeholder{color:var(--ink-faint);font-style:italic;}
+.horizon-chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;}
+.chip{
+  border:1px solid var(--line);background:transparent;color:var(--ink-soft);
+  border-radius:999px;padding:7px 15px;font-size:14px;
+  transition:all 0.2s ease;
+}
+.chip.selected{background:var(--wood);border-color:var(--wood);color:var(--paper);}
+.spark{margin-top:14px;font-size:15px;color:var(--ink-soft);font-style:italic;display:none;}
+.spark.show{display:block;animation:fadein 0.4s ease;}
+.write-actions{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:10px;}
+
+.view-title{display:flex;align-items:center;gap:12px;margin:6px 0 18px;}
+.view-title h2{font-size:22px;}
+.back-btn{background:none;border:none;color:var(--wood);font-size:15px;padding:6px 2px;}
+
+/* ============ Lista de cartas ============ */
+.letter-item{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 18px;margin-bottom:12px;cursor:pointer;box-shadow:var(--shadow);
+  transition:transform 0.15s ease;
+}
+.letter-item:active{transform:scale(0.99);}
+.letter-item .l-date{font-size:13px;color:var(--ink-faint);margin-bottom:4px;}
+.letter-item .l-preview{font-size:15px;color:var(--ink-soft);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.letter-item.sealed{background:var(--paper-2);}
+.letter-item.sealed .l-preview{font-style:italic;color:var(--ink-faint);}
+.seal-tag{display:inline-block;font-size:12px;color:var(--wood);border:1px solid var(--wood);border-radius:999px;padding:2px 10px;margin-bottom:6px;}
+
+.empty-state{color:var(--ink-faint);font-style:italic;text-align:center;padding:44px 20px;font-size:15px;}
+
+/* ============ Suelo ============ */
+.soil-section{margin-bottom:26px;}
+.soil-section h3{font-size:16px;margin-bottom:2px;}
+.soil-section .soil-sub{font-size:13.5px;color:var(--ink-faint);font-style:italic;margin:0 0 12px;}
+.soil-section.fertile h3{color:var(--moss);}
+.soil-section.cold h3{color:var(--indigo);}
+.soil-item{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:11px 14px;margin-bottom:8px;
+}
+.soil-section.fertile .soil-item{border-left:3px solid var(--moss);}
+.soil-section.cold .soil-item{border-left:3px solid var(--indigo);}
+.soil-item .s-label{flex:1;}
+.soil-item .s-kind{font-size:12px;color:var(--ink-faint);}
+.soil-item .s-note{font-size:13px;color:var(--ink-soft);font-style:italic;display:block;}
+.soil-item button{background:none;border:none;color:var(--ink-faint);font-size:15px;padding:4px 6px;}
+.soil-add{display:flex;gap:8px;margin-top:6px;}
+.soil-add input{
+  flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 13px;
+  background:var(--card);outline:none;font-size:15px;
+}
+.soil-add input:focus{border-color:var(--wood);}
+.kind-row{display:flex;gap:6px;margin-top:8px;}
+.kind-row .chip{font-size:13px;padding:5px 12px;}
+
+/* ============ Overlays ============ */
+.overlay{
+  position:fixed;inset:0;z-index:60;display:none;
+  background:var(--paper);
+  overflow-y:auto;
+}
+.overlay.show{display:block;animation:fadein 0.4s ease;}
+.overlay .wrap{padding-top:32px;}
+.overlay-dim{
+  position:fixed;inset:0;z-index:70;display:none;
+  background:rgba(30,26,20,0.45);
+  align-items:center;justify-content:center;padding:24px;
+}
+.overlay-dim.show{display:flex;animation:fadein 0.25s ease;}
+.dialog{
+  background:var(--card);border-radius:var(--radius);padding:24px;max-width:420px;width:100%;
+  box-shadow:0 8px 40px rgba(0,0,0,0.25);
+}
+.dialog h3{margin-bottom:8px;}
+.dialog p{color:var(--ink-soft);font-size:15px;margin:0 0 18px;}
+.dialog .card-actions{margin-top:0;justify-content:flex-end;}
+
+/* ============ La Atrapada ============ */
+.catch-stage{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:32px 28px calc(32px + env(safe-area-inset-bottom));position:relative;
+}
+.catch-step{display:none;max-width:440px;width:100%;animation:fadein 0.5s ease;}
+.catch-step.active{display:block;}
+.catch-step h2{font-size:24px;margin-bottom:12px;}
+.catch-step p{color:var(--ink-soft);font-size:16.5px;margin:0 0 26px;}
+.catch-exit{position:absolute;top:20px;left:20px;background:none;border:none;color:var(--ink-faint);font-size:14px;padding:8px;}
+
+.breath-scene{display:flex;flex-direction:column;align-items:center;gap:26px;}
+.breath-circle{
+  width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, var(--moss-pale), var(--moss));
+  opacity:0.85;
+  transform:scale(0.78);
+  transition-property:transform;
+  transition-timing-function:cubic-bezier(0.45,0,0.55,1);
+}
+.breath-circle.in{transform:scale(1.28);}
+.breath-text{font-size:20px;color:var(--ink-soft);min-height:30px;font-style:italic;}
+.breath-dots{display:flex;gap:9px;}
+.breath-dots span{width:8px;height:8px;border-radius:50%;background:var(--line);transition:background 0.4s;}
+.breath-dots span.done{background:var(--moss);}
+
+.ground-input{
+  width:100%;border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+  background:var(--card);font-size:16px;outline:none;margin-bottom:20px;min-height:80px;resize:vertical;
+}
+.ground-input:focus{border-color:var(--moss);}
+.catch-done-mark{font-size:44px;margin-bottom:10px;color:var(--moss);}
+
+/* ============ Onboarding ============ */
+.ob-step{display:none;max-width:460px;margin:0 auto;animation:fadein 0.5s ease;}
+.ob-step.active{display:block;}
+.ob-step h2{font-size:24px;margin:20px 0 10px;}
+.ob-step p{color:var(--ink-soft);}
+.ob-progress{display:flex;gap:8px;justify-content:center;margin-top:8px;}
+.ob-progress span{width:26px;height:3px;border-radius:2px;background:var(--line);}
+.ob-progress span.on{background:var(--wood);}
+.name-input{
+  width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 16px;
+  background:var(--card);font-size:18px;outline:none;margin:10px 0 6px;
+}
+.ob-actions{display:flex;justify-content:space-between;align-items:center;margin-top:30px;gap:10px;}
+
+/* ============ Ajustes ============ */
+.setting-row{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:15px 2px;border-bottom:1px solid var(--line);
+}
+.setting-row .s-title{font-size:16px;}
+.setting-row .s-desc{font-size:13px;color:var(--ink-faint);}
+.setting-row select{
+  border:1px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--card);outline:none;
+}
+.privacy-note{
+  margin-top:26px;padding:16px 18px;border-radius:var(--radius);
+  background:var(--paper-2);color:var(--ink-soft);font-size:14px;font-style:italic;
+}
+
+/* ============ Bloqueo ============ */
+.lock-stage{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:18px;padding:32px;text-align:center;
+}
+.pin-input{
+  border:1px solid var(--line);border-radius:12px;padding:14px 18px;font-size:24px;
+  letter-spacing:0.5em;text-align:center;width:200px;background:var(--card);outline:none;
+}
+.pin-msg{color:var(--ink-faint);font-size:14px;min-height:20px;}
+
+/* ============ Toast ============ */
+.toast{
+  position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(10px);
+  background:var(--ink);color:var(--paper);border-radius:12px;padding:11px 20px;
+  font-size:15px;opacity:0;pointer-events:none;transition:all 0.35s ease;z-index:80;
+  max-width:86vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.mono-phrase{
+  text-align:center;color:var(--ink-faint);font-style:italic;font-size:14px;
+  margin-top:34px;padding:0 12px;
+}
+.catches-line{font-size:14px;color:var(--ink-faint);text-align:center;margin-top:18px;font-style:italic;}
+
+.read-body{white-space:pre-wrap;font-size:18px;line-height:1.75;margin-top:14px;}
+.read-meta{font-size:13.5px;color:var(--ink-faint);font-style:italic;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important;transition-duration:0.01s !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ Bloqueo ============ -->
+<div class="overlay" id="lock-overlay">
+  <div class="lock-stage">
+    <div style="font-size:38px;color:var(--wood);">◯</div>
+    <h2 id="lock-title">Un momento privado</h2>
+    <input class="pin-input" id="lock-pin" type="password" inputmode="numeric" maxlength="8" autocomplete="off" aria-label="PIN">
+    <div class="pin-msg" id="lock-msg"></div>
+    <button class="btn btn-primary" id="lock-enter">Entrar</button>
+  </div>
+</div>
+
+<!-- ============ Onboarding ============ -->
+<div class="overlay" id="ob-overlay">
+  <div class="wrap">
+    <div class="ob-progress"><span data-ob="1"></span><span data-ob="2"></span><span data-ob="3"></span></div>
+
+    <div class="ob-step" data-step="1">
+      <h2>Un lugar tranquilo</h2>
+      <p>Esta es una habitación pequeña y silenciosa: para escribirle a tu yo futuro, para atrapar a la vigilancia cuando aparece, y para elegir el suelo donde creces.</p>
+      <p>Primero, dale un nombre. O deja el que trae.</p>
+      <div class="horizon-chips" id="ob-name-chips" style="margin-top:14px;">
+        <button class="chip selected" data-name="Engawa">Engawa</button>
+        <button class="chip" data-name="Ma">Ma 間</button>
+        <button class="chip" data-name="Sala">Sala</button>
+      </div>
+      <input class="name-input" id="ob-name" value="Engawa" aria-label="Nombre de la app">
+      <p style="font-size:13.5px;font-style:italic;">El engawa es la veranda japonesa entre el interior y el exterior: un umbral para estar, sin prisa.</p>
+      <div class="ob-actions">
+        <span></span>
+        <button class="btn btn-primary" data-obnext="2">Seguir</button>
+      </div>
+    </div>
+
+    <div class="ob-step" data-step="2">
+      <h2>Tu yo futuro</h2>
+      <p>Cuando escribas una carta, quedará sellada hasta su fecha. ¿A qué distancia vive tu yo futuro, normalmente?</p>
+      <div class="horizon-chips" id="ob-horizon" style="margin-top:16px;">
+        <button class="chip selected" data-h="12">1 año</button>
+        <button class="chip" data-h="60">5 años</button>
+        <button class="chip" data-h="120">10 años</button>
+      </div>
+      <p style="font-size:13.5px;font-style:italic;">Podrás cambiarlo en cada carta. Y abrir antes de tiempo también está permitido.</p>
+      <div class="ob-actions">
+        <button class="btn-quiet" data-obnext="1">Atrás</button>
+        <button class="btn btn-primary" data-obnext="3">Seguir</button>
+      </div>
+    </div>
+
+    <div class="ob-step" data-step="3">
+      <h2>Todo se queda aquí</h2>
+      <p>Lo que escribas vive solo en este dispositivo. No hay cuenta, no hay nube, no hay nadie más leyendo. Puedes exportarlo o borrarlo todo cuando quieras, y ponerle un PIN en Ajustes.</p>
+      <p>Y una cosa más: aquí no hay rachas, ni avisos, ni deudas. Algunos días no se escribe. También eso es parte.</p>
+      <div class="ob-actions">
+        <button class="btn-quiet" data-obnext="2">Atrás</button>
+        <button class="btn btn-primary" id="ob-finish">Empezar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ App ============ -->
+<div id="app" style="display:none;">
+<div class="wrap">
+  <header class="top">
+    <div class="app-name" id="app-name">Engawa</div>
+    <div class="today-date" id="today-date"></div>
+  </header>
+
+  <!-- ===== Hoy ===== -->
+  <section class="view active" id="view-home">
+    <h2 class="greeting" id="greeting">Hola</h2>
+    <p class="greeting-sub" id="greeting-sub">Estar aquí ya es suficiente.</p>
+
+    <div id="invite-slot"></div>
+
+    <button class="btn-big" id="go-write">
+      Escribir a tu yo futuro
+      <small id="write-hint">Dos líneas también cuentan.</small>
+    </button>
+
+    <div id="soil-nudge-slot" style="margin-top:16px;"></div>
+
+    <p class="catches-line" id="catches-line" style="display:none;"></p>
+    <p class="mono-phrase" id="mono-phrase"></p>
+  </section>
+
+  <!-- ===== Cartas ===== -->
+  <section class="view" id="view-letters">
+    <div class="view-title"><h2>Cartas</h2></div>
+    <div id="letters-list"></div>
+    <button class="btn btn-primary btn-block" id="go-write-2" style="margin-top:8px;">Escribir una nueva</button>
+  </section>
+
+  <!-- ===== Escribir ===== -->
+  <section class="view" id="view-write">
+    <div class="view-title">
+      <button class="back-btn" data-back="home">← Volver</button>
+    </div>
+    <div class="horizon-chips" id="write-horizon">
+      <button class="chip" data-h="12">1 año</button>
+      <button class="chip" data-h="60">5 años</button>
+      <button class="chip" data-h="120">10 años</button>
+      <button class="chip" data-h="0">Sin fecha</button>
+    </div>
+    <div class="write-surface">
+      <textarea id="letter-body" placeholder="Querido yo…" aria-label="Cuerpo de la carta"></textarea>
+      <p class="spark" id="spark-text"></p>
+    </div>
+    <div class="write-actions">
+      <button class="btn-quiet" id="spark-btn">¿Una chispa?</button>
+      <button class="btn btn-primary" id="save-letter">Sellar carta</button>
+    </div>
+  </section>
+
+  <!-- ===== Suelo ===== -->
+  <section class="view" id="view-soil">
+    <div class="view-title"><h2>Suelo</h2></div>
+    <p style="color:var(--ink-soft);font-size:15px;margin:0 0 22px;">
+      No se trata de juzgar a nadie. Solo de notar: ¿dónde puedes ser plenamente tú, y dónde te recortas para caber?
+    </p>
+
+    <div class="soil-section fertile">
+      <h3>Suelo fértil</h3>
+      <p class="soil-sub">Personas, lugares y actividades donde floreces.</p>
+      <div id="fertile-list"></div>
+      <div class="soil-add">
+        <input id="fertile-input" placeholder="Añadir…" aria-label="Añadir suelo fértil">
+        <button class="btn btn-ghost" data-addsoil="fertile">Añadir</button>
+      </div>
+      <div class="kind-row" id="fertile-kinds">
+        <button class="chip selected" data-k="person">Persona</button>
+        <button class="chip" data-k="place">Lugar</button>
+        <button class="chip" data-k="activity">Actividad</button>
+      </div>
+    </div>
+
+    <div class="soil-section cold">
+      <h3>Habitación fría</h3>
+      <p class="soil-sub">Donde entras con abrigo puesto. Está bien saberlo.</p>
+      <div id="cold-list"></div>
+      <div class="soil-add">
+        <input id="cold-input" placeholder="Añadir…" aria-label="Añadir habitación fría">
+        <button class="btn btn-ghost" data-addsoil="cold">Añadir</button>
+      </div>
+      <div class="kind-row" id="cold-kinds">
+        <button class="chip selected" data-k="person">Persona</button>
+        <button class="chip" data-k="place">Lugar</button>
+        <button class="chip" data-k="activity">Actividad</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Ajustes ===== -->
+  <section class="view" id="view-settings">
+    <div class="view-title"><h2>Ajustes</h2></div>
+
+    <div class="setting-row">
+      <div><div class="s-title">Nombre</div><div class="s-desc">Cómo se llama este lugar</div></div>
+      <input id="set-name" style="width:130px;border:1px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--card);outline:none;" aria-label="Nombre">
+    </div>
+
+    <div class="setting-row">
+      <div><div class="s-title">Tema</div></div>
+      <select id="set-theme" aria-label="Tema">
+        <option value="auto">Automático</option>
+        <option value="light">Claro</option>
+        <option value="dark">Oscuro</option>
+      </select>
+    </div>
+
+    <div class="setting-row">
+      <div><div class="s-title">Horizonte habitual</div><div class="s-desc">Para nuevas cartas</div></div>
+      <select id="set-horizon" aria-label="Horizonte">
+        <option value="12">1 año</option>
+        <option value="60">5 años</option>
+        <option value="120">10 años</option>
+      </select>
+    </div>
+
+    <div class="setting-row">
+      <div><div class="s-title">PIN de entrada</div><div class="s-desc" id="pin-desc">Sin PIN</div></div>
+      <button class="btn btn-ghost" id="pin-btn">Activar</button>
+    </div>
+
+    <div class="setting-row">
+      <div><div class="s-title">Exportar todo</div><div class="s-desc">Descarga un archivo con tus datos</div></div>
+      <button class="btn btn-ghost" id="export-btn">Exportar</button>
+    </div>
+
+    <div class="setting-row" style="border-bottom:none;">
+      <div><div class="s-title">Borrar todo</div><div class="s-desc">Sin copia en ningún servidor</div></div>
+      <button class="btn btn-ghost" id="delete-btn">Borrar</button>
+    </div>
+
+    <div class="privacy-note">
+      Esta app no envía notificaciones ni datos a ningún sitio. Todo vive en este dispositivo.
+      Su medida de éxito es que la necesites cada vez menos — y a la gente real, cada vez más.
+    </div>
+  </section>
+</div>
+
+<!-- ===== Navegación ===== -->
+<nav class="bottom">
+  <button class="nav-item active" data-view="home" aria-label="Hoy">
+    <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/></svg>
+    Hoy
+  </button>
+  <button class="nav-item" data-view="letters" aria-label="Cartas">
+    <svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="13" rx="2"/><path d="m4.5 7.5 7.5 6 7.5-6"/></svg>
+    Cartas
+  </button>
+  <div class="catch-wrap">
+    <button class="catch-btn" id="catch-btn" aria-label="Atrapar la vigilancia">✳</button>
+    <div class="catch-label">Atrapar</div>
+  </div>
+  <button class="nav-item" data-view="soil" aria-label="Suelo">
+    <svg viewBox="0 0 24 24"><path d="M12 20v-8"/><path d="M12 12c0-4 3-6 7-6 0 4-3 6-7 6Z"/><path d="M12 14c0-3-2.5-5-5.5-5 0 3 2.5 5 5.5 5Z"/><path d="M4 20h16"/></svg>
+    Suelo
+  </button>
+  <button class="nav-item" data-view="settings" aria-label="Ajustes">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.06-.4.1-.8.1-1.2Z"/></svg>
+    Ajustes
+  </button>
+</nav>
+</div>
+
+<!-- ============ La Atrapada ============ -->
+<div class="overlay" id="catch-overlay">
+  <div class="catch-stage">
+    <button class="catch-exit" id="catch-exit">Salir</button>
+
+    <div class="catch-step" data-cstep="1">
+      <h2>La vigilancia apareció.</h2>
+      <p>Es tu vieja forma de cuidar. Puedes darle las gracias — y decirle que ahora mismo no hace falta que vigile.</p>
+      <button class="btn btn-primary" id="catch-breathe">Respirar</button>
+    </div>
+
+    <div class="catch-step" data-cstep="2">
+      <div class="breath-scene">
+        <div class="breath-circle" id="breath-circle"></div>
+        <div class="breath-text" id="breath-text">Inhala…</div>
+        <div class="breath-dots" id="breath-dots"><span></span><span></span><span></span><span></span></div>
+        <button class="btn-quiet" id="breath-skip">Con esto basta</button>
+      </div>
+    </div>
+
+    <div class="catch-step" data-cstep="3">
+      <h2>Vuelve a la habitación donde estás.</h2>
+      <p>Describe una cosa real que tengas delante: su color, su peso, su textura.</p>
+      <textarea class="ground-input" id="ground-input" placeholder="Delante de mí hay…" aria-label="Descripción"></textarea>
+      <button class="btn btn-primary" id="catch-done-btn">Listo</button>
+    </div>
+
+    <div class="catch-step" data-cstep="4">
+      <div class="catch-done-mark">✳</div>
+      <h2>La atrapaste.</h2>
+      <p>Cada vez que la nombras, pesa un poco menos. Esto es fuerza, no un fallo.</p>
+      <button class="btn btn-ghost" id="catch-close">Volver</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Leer carta ============ -->
+<div class="overlay" id="read-overlay">
+  <div class="wrap">
+    <div class="view-title">
+      <button class="back-btn" id="read-back">← Volver</button>
+    </div>
+    <p class="read-meta" id="read-meta"></p>
+    <div class="read-body" id="read-body"></div>
+    <div class="card-actions" style="margin-top:26px;">
+      <button class="btn btn-ghost" id="read-delete">Soltar esta carta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Diálogo genérico ============ -->
+<div class="overlay-dim" id="dialog-overlay">
+  <div class="dialog">
+    <h3 id="dialog-title"></h3>
+    <p id="dialog-text"></p>
+    <div class="card-actions">
+      <button class="btn btn-quiet" id="dialog-cancel"></button>
+      <button class="btn btn-primary" id="dialog-ok"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+/* ================= Utilidades ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+const fmtDate = iso => new Intl.DateTimeFormat('es', {day:'numeric', month:'long', year:'numeric'}).format(new Date(iso));
+const addMonths = (date, m) => { const d = new Date(date); d.setMonth(d.getMonth() + m); return d; };
+const esc = s => { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
+
+let toastTimer = null;
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ================= Ajustes (localStorage) ================= */
+const SETTINGS_KEY = 'engawa-settings';
+const defaultSettings = {
+  name: 'Engawa',
+  theme: 'auto',
+  horizon: 12,
+  pinHash: null,
+  onboarded: false,
+  lastCadence: null,
+  lastSoilNudge: null,
+};
+let settings = { ...defaultSettings };
+try { settings = { ...defaultSettings, ...(JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}) }; } catch(e){}
+function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+
+function applyTheme(){
+  const root = document.documentElement;
+  if (settings.theme === 'auto') root.removeAttribute('data-theme');
+  else root.setAttribute('data-theme', settings.theme);
+}
+function applyName(){
+  $('#app-name').textContent = settings.name;
+  document.title = settings.name;
+}
+
+/* ================= IndexedDB ================= */
+let db = null;
+function openDB(){
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('engawa-db', 1);
+    r.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('entries')) d.createObjectStore('entries', {keyPath:'id'});
+      if (!d.objectStoreNames.contains('soil')) d.createObjectStore('soil', {keyPath:'id'});
+    };
+    r.onsuccess = () => { db = r.result; res(db); };
+    r.onerror = () => rej(r.error);
+  });
+}
+function dbPut(store, obj){
+  return new Promise((res, rej) => {
+    const t = db.transaction(store, 'readwrite');
+    t.objectStore(store).put(obj);
+    t.oncomplete = () => res();
+    t.onerror = () => rej(t.error);
+  });
+}
+function dbDel(store, id){
+  return new Promise((res, rej) => {
+    const t = db.transaction(store, 'readwrite');
+    t.objectStore(store).delete(id);
+    t.oncomplete = () => res();
+    t.onerror = () => rej(t.error);
+  });
+}
+function dbAll(store){
+  return new Promise((res, rej) => {
+    const req = db.transaction(store).objectStore(store).getAll();
+    req.onsuccess = () => res(req.result || []);
+    req.onerror = () => rej(req.error);
+  });
+}
+function dbClear(store){
+  return new Promise((res, rej) => {
+    const t = db.transaction(store, 'readwrite');
+    t.objectStore(store).clear();
+    t.oncomplete = () => res();
+    t.onerror = () => rej(t.error);
+  });
+}
+
+/* ================= Estado en memoria ================= */
+let entries = [];
+let soil = [];
+async function reload(){
+  entries = await dbAll('entries');
+  soil = await dbAll('soil');
+}
+const letters = () => entries.filter(e => e.type === 'letter').sort((a,b) => b.createdAt.localeCompare(a.createdAt));
+const catches = () => entries.filter(e => e.type === 'catch');
+
+/* ================= Copys ================= */
+const PROMPTS = [
+  '¿Qué quieres que tu yo futuro recuerde de este día corriente?',
+  '¿Qué pequeña cosa te dio alegría hoy, aunque parezca poca?',
+  '¿Qué te preocupa hoy — y qué le dirías desde la calma de dentro de un año?',
+  '¿En qué habitación estuviste hoy: fértil o fría? ¿Cómo lo notaste en el cuerpo?',
+  'Escribe como si tu yo futuro ya estuviera bien. Cuéntale cómo empezó.',
+  '¿Qué estás construyendo despacio que te gustaría que durara más que tú?',
+  '¿Qué le dirías hoy al niño que mira por la ventana?',
+];
+const MONO = [
+  'Algunos días no se escribe. También eso es parte.',
+  'Nada aquí es una deuda. Todo es una invitación.',
+  'Lo que pasa y no vuelve, también fue tuyo.',
+  'El suelo también descansa en invierno.',
+  'La flor no se apura, y llega.',
+];
+const KINDS = { person:'Persona', place:'Lugar', activity:'Actividad' };
+
+/* ================= Navegación ================= */
+function showView(name){
+  $$('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+  $$('nav.bottom .nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  window.scrollTo({top:0});
+  if (name === 'letters') renderLetters();
+  if (name === 'soil') renderSoil();
+  if (name === 'home') renderHome();
+  if (name === 'settings') renderSettings();
+}
+$$('nav.bottom .nav-item').forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
+$$('.back-btn[data-back]').forEach(b => b.addEventListener('click', () => showView(b.dataset.back)));
+
+/* ================= Diálogo genérico ================= */
+function ask(title, text, okLabel, cancelLabel){
+  return new Promise(res => {
+    $('#dialog-title').textContent = title;
+    $('#dialog-text').textContent = text;
+    $('#dialog-ok').textContent = okLabel;
+    $('#dialog-cancel').textContent = cancelLabel;
+    const ov = $('#dialog-overlay');
+    ov.classList.add('show');
+    const done = v => { ov.classList.remove('show'); $('#dialog-ok').onclick = $('#dialog-cancel').onclick = null; res(v); };
+    $('#dialog-ok').onclick = () => done(true);
+    $('#dialog-cancel').onclick = () => done(false);
+  });
+}
+
+/* ================= Hoy ================= */
+function greetingFor(h){
+  if (h < 6) return 'Buenas noches';
+  if (h < 13) return 'Buenos días';
+  if (h < 21) return 'Buenas tardes';
+  return 'Buenas noches';
+}
+function renderHome(){
+  const now = new Date();
+  $('#today-date').textContent = new Intl.DateTimeFormat('es', {weekday:'long', day:'numeric', month:'long'}).format(now);
+  $('#greeting').textContent = greetingFor(now.getHours());
+  const dayIdx = Math.floor(now.getTime() / 86400000);
+  $('#mono-phrase').textContent = MONO[dayIdx % MONO.length];
+
+  const n = catches().length;
+  const line = $('#catches-line');
+  if (n > 0){
+    line.style.display = 'block';
+    line.textContent = n === 1
+      ? 'Has atrapado la vigilancia una vez. Cuenta como cuidado, no como fallo.'
+      : `Has atrapado la vigilancia ${n} veces. Todas cuentan como cuidado, ninguna como fallo.`;
+  } else line.style.display = 'none';
+
+  renderInvite();
+  renderSoilNudge();
+}
+
+/* --- Invitaciones: carta vencida > aniversario > cadencia --- */
+function pickInvite(){
+  const now = new Date();
+  const ls = letters();
+
+  const due = ls.filter(l => l.surfaceAt && !l.openedAt && new Date(l.surfaceAt) <= now)
+                .sort((a,b) => a.surfaceAt.localeCompare(b.surfaceAt));
+  if (due.length) return { kind:'due', letter: due[0] };
+
+  const y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
+  const anniv = ls.find(l => {
+    const c = new Date(l.createdAt);
+    return c.getFullYear() < y && c.getMonth() === m && c.getDate() === d && l.annivYear !== y
+      && (!l.surfaceAt || l.openedAt || new Date(l.surfaceAt) <= now);
+  });
+  if (anniv) return { kind:'anniv', letter: anniv, years: y - new Date(anniv.createdAt).getFullYear() };
+
+  const last = settings.lastCadence ? new Date(settings.lastCadence) : null;
+  if (!last || (now - last) > 10 * 86400000){
+    const old = ls.filter(l => (now - new Date(l.createdAt)) > 30 * 86400000 && (!l.surfaceAt || l.openedAt));
+    if (old.length){
+      const pick = old[Math.floor(Math.random() * old.length)];
+      return { kind:'cadence', letter: pick };
+    }
+  }
+  return null;
+}
+function renderInvite(){
+  const slot = $('#invite-slot');
+  slot.innerHTML = '';
+  const inv = pickInvite();
+  if (!inv) return;
+  const card = document.createElement('div');
+  card.className = 'card invite';
+  let tag = '', text = '';
+  if (inv.kind === 'due'){
+    tag = 'Una carta te espera';
+    text = `Te la escribiste el ${fmtDate(inv.letter.createdAt)}. Ha llegado su momento — si quieres.`;
+  } else if (inv.kind === 'anniv'){
+    tag = 'Un día como hoy';
+    text = `Hace ${inv.years === 1 ? 'un año' : inv.years + ' años'}, un día como hoy, te escribiste. ¿Quieres visitarlo?`;
+  } else {
+    tag = 'Del archivo';
+    text = `Hace tiempo escribiste algo que quizá te guste releer. Sin prisa.`;
+  }
+  card.innerHTML = `<div class="invite-tag">${tag}</div><p>${text}</p>
+    <div class="card-actions">
+      <button class="btn btn-primary" data-open>Abrirla</button>
+      <button class="btn-quiet" data-later>Ahora no</button>
+    </div>`;
+  card.querySelector('[data-open]').addEventListener('click', async () => {
+    if (inv.kind === 'anniv'){ inv.letter.annivYear = new Date().getFullYear(); await dbPut('entries', inv.letter); }
+    if (inv.kind === 'cadence'){ settings.lastCadence = new Date().toISOString(); saveSettings(); }
+    openLetter(inv.letter);
+  });
+  card.querySelector('[data-later]').addEventListener('click', async () => {
+    if (inv.kind === 'anniv'){ inv.letter.annivYear = new Date().getFullYear(); await dbPut('entries', inv.letter); }
+    if (inv.kind === 'cadence'){ settings.lastCadence = new Date().toISOString(); saveSettings(); }
+    slot.innerHTML = '';
+    toast('Estará aquí cuando quieras.');
+  });
+  slot.appendChild(card);
+}
+
+/* --- Empuje suave de suelo (semanal) --- */
+function renderSoilNudge(){
+  const slot = $('#soil-nudge-slot');
+  slot.innerHTML = '';
+  const fertile = soil.filter(s => s.soil === 'fertile');
+  if (!fertile.length) return;
+  const last = settings.lastSoilNudge ? new Date(settings.lastSoilNudge) : null;
+  if (last && (new Date() - last) < 7 * 86400000) return;
+  const pick = fertile[Math.floor(Math.random() * fertile.length)];
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<p>Esta semana, si puedes, un rato más en suelo fértil — quizá con <strong>${esc(pick.label)}</strong>.</p>
+    <div class="card-actions"><button class="btn-quiet" data-ok>Vale</button></div>`;
+  card.querySelector('[data-ok]').addEventListener('click', () => {
+    settings.lastSoilNudge = new Date().toISOString();
+    saveSettings();
+    slot.innerHTML = '';
+  });
+  slot.appendChild(card);
+}
+
+/* ================= Escribir carta ================= */
+let writeHorizon = settings.horizon;
+function setupWriteView(){
+  writeHorizon = settings.horizon;
+  $$('#write-horizon .chip').forEach(c => c.classList.toggle('selected', Number(c.dataset.h) === writeHorizon));
+  $('#letter-body').value = '';
+  $('#spark-text').classList.remove('show');
+}
+$$('#write-horizon .chip').forEach(c => c.addEventListener('click', () => {
+  writeHorizon = Number(c.dataset.h);
+  $$('#write-horizon .chip').forEach(x => x.classList.toggle('selected', x === c));
+  $('#save-letter').textContent = writeHorizon === 0 ? 'Guardar' : 'Sellar carta';
+}));
+let sparkIdx = Math.floor(Math.random() * PROMPTS.length);
+$('#spark-btn').addEventListener('click', () => {
+  const el = $('#spark-text');
+  el.textContent = PROMPTS[sparkIdx % PROMPTS.length];
+  sparkIdx++;
+  el.classList.add('show');
+});
+$('#go-write').addEventListener('click', () => { setupWriteView(); showView('write'); });
+$('#go-write-2').addEventListener('click', () => { setupWriteView(); showView('write'); });
+
+$('#save-letter').addEventListener('click', async () => {
+  const body = $('#letter-body').value.trim();
+  if (!body){ toast('Está bien no escribir hoy. La página te espera.'); return; }
+  const createdAt = new Date().toISOString();
+  const surfaceAt = writeHorizon > 0 ? addMonths(createdAt, writeHorizon).toISOString() : null;
+  const entry = { id: uid(), type:'letter', createdAt, horizonMonths: writeHorizon || null, surfaceAt, openedAt: null, body };
+  await dbPut('entries', entry);
+  entries.push(entry);
+  showView('home');
+  toast(surfaceAt ? `Sellada. Volverá a ti el ${fmtDate(surfaceAt)}.` : 'Guardada.');
+});
+
+/* ================= Lista y lectura de cartas ================= */
+function renderLetters(){
+  const list = $('#letters-list');
+  const ls = letters();
+  if (!ls.length){
+    list.innerHTML = '<div class="empty-state">Aún no hay cartas.<br>La primera puede ser de dos líneas.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  const now = new Date();
+  ls.forEach(l => {
+    const sealed = l.surfaceAt && !l.openedAt && new Date(l.surfaceAt) > now;
+    const item = document.createElement('div');
+    item.className = 'letter-item' + (sealed ? ' sealed' : '');
+    item.innerHTML = sealed
+      ? `<span class="seal-tag">Sellada · se abre el ${fmtDate(l.surfaceAt)}</span>
+         <div class="l-date">${fmtDate(l.createdAt)}</div>
+         <div class="l-preview">Una carta esperando su momento.</div>`
+      : `<div class="l-date">${fmtDate(l.createdAt)}${l.surfaceAt ? ' · para el ' + fmtDate(l.surfaceAt) : ''}</div>
+         <div class="l-preview">${esc(l.body.slice(0, 140))}</div>`;
+    item.addEventListener('click', async () => {
+      if (sealed){
+        const open = await ask('Aún no es su momento', '¿Quieres abrirla igualmente? También está bien: es tuya.', 'Abrir ahora', 'Dejarla descansar');
+        if (!open) return;
+      }
+      openLetter(l);
+    });
+    list.appendChild(item);
+  });
+}
+let currentRead = null;
+async function openLetter(l){
+  currentRead = l;
+  if (!l.openedAt){ l.openedAt = new Date().toISOString(); await dbPut('entries', l); }
+  let meta = `Escrita el ${fmtDate(l.createdAt)}`;
+  if (l.surfaceAt) meta += ` · sellada hasta el ${fmtDate(l.surfaceAt)}`;
+  $('#read-meta').textContent = meta;
+  $('#read-body').textContent = l.body;
+  $('#read-overlay').classList.add('show');
+}
+$('#read-back').addEventListener('click', () => {
+  $('#read-overlay').classList.remove('show');
+  renderHome(); renderLetters();
+});
+$('#read-delete').addEventListener('click', async () => {
+  if (!currentRead) return;
+  const yes = await ask('Soltar esta carta', 'Se borrará de este dispositivo. Lo que te dio, ya es tuyo.', 'Soltarla', 'Conservarla');
+  if (!yes) return;
+  await dbDel('entries', currentRead.id);
+  entries = entries.filter(e => e.id !== currentRead.id);
+  currentRead = null;
+  $('#read-overlay').classList.remove('show');
+  renderHome(); renderLetters();
+});
+
+/* ================= La Atrapada ================= */
+const breath = { timers: [], cycle: 0, total: 4 };
+function catchStep(n){
+  $$('#catch-overlay .catch-step').forEach(s => s.classList.toggle('active', Number(s.dataset.cstep) === n));
+}
+function stopBreath(){
+  breath.timers.forEach(clearTimeout);
+  breath.timers = [];
+}
+function openCatch(){
+  stopBreath();
+  $('#ground-input').value = '';
+  catchStep(1);
+  $('#catch-overlay').classList.add('show');
+}
+function closeCatch(){
+  stopBreath();
+  $('#catch-overlay').classList.remove('show');
+  renderHome();
+}
+function runBreathCycle(){
+  if (breath.cycle >= breath.total){ catchStep(3); return; }
+  breath.cycle++;
+  $$('#breath-dots span').forEach((d, i) => d.classList.toggle('done', i < breath.cycle));
+  const c = $('#breath-circle'), t = $('#breath-text');
+  t.textContent = 'Inhala…';
+  c.style.transitionDuration = '4s';
+  c.classList.add('in');
+  breath.timers.push(setTimeout(() => {
+    t.textContent = 'Exhala…';
+    c.style.transitionDuration = '6s';
+    c.classList.remove('in');
+    breath.timers.push(setTimeout(runBreathCycle, 6000));
+  }, 4000));
+}
+$('#catch-btn').addEventListener('click', openCatch);
+$('#catch-exit').addEventListener('click', closeCatch);
+$('#catch-breathe').addEventListener('click', () => {
+  catchStep(2);
+  breath.cycle = 0;
+  $$('#breath-dots span').forEach(d => d.classList.remove('done'));
+  $('#breath-circle').classList.remove('in');
+  breath.timers.push(setTimeout(runBreathCycle, 400));
+});
+$('#breath-skip').addEventListener('click', () => { stopBreath(); catchStep(3); });
+$('#catch-done-btn').addEventListener('click', async () => {
+  const ground = $('#ground-input').value.trim();
+  const entry = { id: uid(), type:'catch', createdAt: new Date().toISOString(), ground: ground || null };
+  await dbPut('entries', entry);
+  entries.push(entry);
+  catchStep(4);
+});
+$('#catch-close').addEventListener('click', closeCatch);
+
+/* ================= Suelo ================= */
+const soilKind = { fertile:'person', cold:'person' };
+['fertile','cold'].forEach(side => {
+  $$(`#${side}-kinds .chip`).forEach(c => c.addEventListener('click', () => {
+    soilKind[side] = c.dataset.k;
+    $$(`#${side}-kinds .chip`).forEach(x => x.classList.toggle('selected', x === c));
+  }));
+  $(`[data-addsoil="${side}"]`).addEventListener('click', () => addSoil(side));
+  $(`#${side}-input`).addEventListener('keydown', e => { if (e.key === 'Enter') addSoil(side); });
+});
+async function addSoil(side){
+  const input = $(`#${side}-input`);
+  const label = input.value.trim();
+  if (!label) return;
+  const item = { id: uid(), label, kind: soilKind[side], soil: side, note: '' };
+  await dbPut('soil', item);
+  soil.push(item);
+  input.value = '';
+  renderSoil();
+}
+function renderSoil(){
+  ['fertile','cold'].forEach(side => {
+    const list = $(`#${side}-list`);
+    const items = soil.filter(s => s.soil === side);
+    if (!items.length){
+      list.innerHTML = `<div class="empty-state" style="padding:16px;">${side === 'fertile' ? 'Aún no hay nada aquí. ¿Con quién respiras mejor?' : 'Vacío, de momento.'}</div>`;
+      return;
+    }
+    list.innerHTML = '';
+    items.forEach(it => {
+      const el = document.createElement('div');
+      el.className = 'soil-item';
+      el.innerHTML = `<div class="s-label">${esc(it.label)} <span class="s-kind">· ${KINDS[it.kind] || ''}</span>
+          ${it.note ? `<span class="s-note">${esc(it.note)}</span>` : ''}</div>
+        <button data-move title="Mover al otro lado" aria-label="Mover">⇄</button>
+        <button data-del aria-label="Quitar">×</button>`;
+      el.querySelector('[data-move]').addEventListener('click', async () => {
+        it.soil = it.soil === 'fertile' ? 'cold' : 'fertile';
+        await dbPut('soil', it);
+        renderSoil();
+      });
+      el.querySelector('[data-del]').addEventListener('click', async () => {
+        await dbDel('soil', it.id);
+        soil = soil.filter(s => s.id !== it.id);
+        renderSoil();
+      });
+      list.appendChild(el);
+    });
+  });
+}
+
+/* ================= Ajustes ================= */
+function renderSettings(){
+  $('#set-name').value = settings.name;
+  $('#set-theme').value = settings.theme;
+  $('#set-horizon').value = String(settings.horizon);
+  $('#pin-desc').textContent = settings.pinHash ? 'Activo' : 'Sin PIN';
+  $('#pin-btn').textContent = settings.pinHash ? 'Quitar' : 'Activar';
+}
+$('#set-name').addEventListener('change', () => {
+  const v = $('#set-name').value.trim();
+  if (!v) return;
+  settings.name = v; saveSettings(); applyName();
+});
+$('#set-theme').addEventListener('change', () => {
+  settings.theme = $('#set-theme').value; saveSettings(); applyTheme();
+});
+$('#set-horizon').addEventListener('change', () => {
+  settings.horizon = Number($('#set-horizon').value); saveSettings();
+});
+
+async function sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+$('#pin-btn').addEventListener('click', async () => {
+  if (settings.pinHash){
+    const yes = await ask('Quitar el PIN', 'La app se abrirá sin pedir nada.', 'Quitar', 'Cancelar');
+    if (!yes) return;
+    settings.pinHash = null; saveSettings(); renderSettings();
+    toast('PIN quitado.');
+    return;
+  }
+  if (!(crypto.subtle)){ toast('El PIN necesita un contexto seguro (https).'); return; }
+  const pin = prompt('Elige un PIN (4–8 dígitos). Guárdalo bien: no hay recuperación, aunque tus datos seguirán en el dispositivo.');
+  if (!pin) return;
+  if (!/^\d{4,8}$/.test(pin)){ toast('Debe tener entre 4 y 8 dígitos.'); return; }
+  settings.pinHash = await sha256(pin);
+  saveSettings(); renderSettings();
+  toast('PIN activado.');
+});
+
+$('#export-btn').addEventListener('click', async () => {
+  const data = {
+    exportedAt: new Date().toISOString(),
+    app: settings.name,
+    settings: { name: settings.name, theme: settings.theme, horizon: settings.horizon },
+    entries,
+    soil,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = settings.name.toLowerCase() + '-export-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+$('#delete-btn').addEventListener('click', async () => {
+  const yes = await ask('Borrar todo', 'Se borrarán todas tus cartas y tu mapa de suelo de este dispositivo. No existe copia en ningún servidor.', 'Borrar todo', 'Cancelar');
+  if (!yes) return;
+  await dbClear('entries');
+  await dbClear('soil');
+  entries = []; soil = [];
+  localStorage.removeItem(SETTINGS_KEY);
+  settings = { ...defaultSettings };
+  saveSettings();
+  location.reload();
+});
+
+/* ================= Onboarding ================= */
+function obStep(n){
+  $$('.ob-step').forEach(s => s.classList.toggle('active', Number(s.dataset.step) === n));
+  $$('.ob-progress span').forEach(sp => sp.classList.toggle('on', Number(sp.dataset.ob) <= n));
+}
+$$('#ob-name-chips .chip').forEach(c => c.addEventListener('click', () => {
+  $$('#ob-name-chips .chip').forEach(x => x.classList.toggle('selected', x === c));
+  $('#ob-name').value = c.dataset.name;
+}));
+$$('#ob-horizon .chip').forEach(c => c.addEventListener('click', () => {
+  $$('#ob-horizon .chip').forEach(x => x.classList.toggle('selected', x === c));
+}));
+$$('[data-obnext]').forEach(b => b.addEventListener('click', () => obStep(Number(b.dataset.obnext))));
+$('#ob-finish').addEventListener('click', () => {
+  settings.name = $('#ob-name').value.trim() || 'Engawa';
+  const hChip = $('#ob-horizon .chip.selected');
+  settings.horizon = hChip ? Number(hChip.dataset.h) : 12;
+  settings.onboarded = true;
+  saveSettings();
+  applyName();
+  $('#ob-overlay').classList.remove('show');
+  startApp();
+});
+
+/* ================= Bloqueo ================= */
+function showLock(){
+  $('#lock-overlay').classList.add('show');
+  $('#lock-pin').focus();
+}
+async function tryUnlock(){
+  const pin = $('#lock-pin').value;
+  if (!pin) return;
+  const h = await sha256(pin);
+  if (h === settings.pinHash){
+    $('#lock-overlay').classList.remove('show');
+    $('#lock-pin').value = '';
+    $('#lock-msg').textContent = '';
+    boot();
+  } else {
+    $('#lock-msg').textContent = 'No es ese. Con calma.';
+    $('#lock-pin').value = '';
+  }
+}
+$('#lock-enter').addEventListener('click', tryUnlock);
+$('#lock-pin').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+
+/* ================= Arranque ================= */
+function startApp(){
+  $('#app').style.display = 'block';
+  applyName();
+  renderHome();
+}
+async function boot(){
+  await openDB();
+  await reload();
+  applyTheme();
+  if (!settings.onboarded){
+    $('#ob-overlay').classList.add('show');
+    obStep(1);
+  } else {
+    startApp();
+  }
+}
+if (settings.pinHash && crypto.subtle){
+  applyTheme();
+  showLock();
+} else {
+  boot();
+}
+
+/* ================= Service worker ================= */
+if ('serviceWorker' in navigator && location.protocol === 'https:'){
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

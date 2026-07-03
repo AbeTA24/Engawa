@@ -1,0 +1,14 @@
+{
+  "name": "Engawa",
+  "short_name": "Engawa",
+  "description": "Un lugar tranquilo para escribirle a tu yo futuro y elegir el suelo donde creces.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F5EFE3",
+  "theme_color": "#F5EFE3",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
