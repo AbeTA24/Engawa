@@ -1,0 +1,6 @@
+{
+  "name": "goal-engine",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts"
+}
