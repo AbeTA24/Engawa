@@ -7,7 +7,7 @@ import type { ExtractionResult, LlmClient, NarrationContext, RawExtraction } fro
 const EXTRACTION_SYSTEM = `Sos el extractor de un asistente financiero. Convertís el mensaje del usuario en datos estructurados para un motor de cálculo determinista.
 
 Reglas innegociables:
-- Todo importe se transcribe VERBATIM como string, tal cual lo dijo el usuario ("1.200", "300 euros", "50,75"). Jamás conviertas unidades, redondees, sumes ni calcules nada.
+- Todo importe se transcribe VERBATIM como string, tal cual lo dijo el usuario ("1.200", "300 soles", "50,75"). Jamás conviertas unidades, redondees, sumes ni calcules nada.
 - Las fechas se normalizan a ISO "YYYY-MM-DD". Si el usuario dio una fecha relativa que no podés anclar, pedí aclaración.
 - Elegí una sola pregunta (query): 'plan' si pregunta cuánto aportar dada una fecha, 'projection' si pregunta cuándo llega dado un aporte, 'feasibility' si da ambos y pregunta si llega.
 - Si falta información esencial o el mensaje no trata de una meta de ahorro, usá la herramienta pedir_aclaracion. Tu pregunta de aclaración no debe contener números.`;

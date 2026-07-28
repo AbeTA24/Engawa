@@ -92,7 +92,7 @@ export class Assistant {
   constructor(options: AssistantOptions) {
     this.llm = options.llm;
     this.engine = options.engine ?? evaluateGoal;
-    this.currency = options.currency ?? 'EUR';
+    this.currency = options.currency ?? 'PEN';
   }
 
   async handle(utterance: string, asOf: ISODate): Promise<{ text: string }> {

@@ -1,10 +1,12 @@
 // Borde de entrada: convierte la transcripción literal del usuario a Cents.
 // Determinista y por manipulación de strings — concatena dígitos, no hay ni
-// una multiplicación. Convención española: ',' decimal, '.' separador de miles.
+// una multiplicación. Convención de entrada (tal como transcribe la
+// extracción): ',' decimal, '.' separador de miles. Nota: la presentación
+// de salida usa la convención peruana inversa (S/ 1,363.64) — ver format.ts.
 
 import type { Cents } from 'goal-engine';
 
-/** "1.200,50 €" → 120050 · "300 euros" → 30000 · "0,05" → 5 · inválido → null */
+/** "1.200,50" → 120050 · "300 soles" → 30000 · "0,05" → 5 · inválido → null */
 export function parseAmountLiteral(raw: string): Cents | null {
   const cleaned = raw.replace(/[^\d.,]/g, '');
   if (!/\d/.test(cleaned)) return null;

@@ -42,12 +42,12 @@ es el motor de cálculo, no el LLM**.
 
 ## 4. El dinero es un entero en céntimos
 
-- Todo importe monetario se representa como **entero de céntimos** (ej.: `10,50 €` = `1050`).
+- Todo importe monetario se representa como **entero de céntimos** (ej.: `S/ 10.50` = `1050`).
 - **Prohibido `float`/`double` para dinero** en cualquier capa: dominio, API, base de datos,
   serialización y UI-estado. Sin excepciones.
 - Las divisiones (cuotas, prorrateos) deben definir explícitamente su política de redondeo
   y garantizar que la suma de las partes iguala el total (sin céntimos perdidos ni creados).
-- El formateo a moneda legible (`1050` → `"10,50 €"`) ocurre **solo** en el borde de
+- El formateo a moneda legible (`1050` → `"S/ 10.50"`) ocurre **solo** en el borde de
   presentación, nunca antes.
 
 ## 5. Contrato de tipos: `assistant` ↔ `goal-engine`
@@ -58,13 +58,13 @@ cualquier cambio al contrato se acuerda primero en este documento.
 ```typescript
 // ═══ Tipos base compartidos por el contrato ═══════════════════════════
 
-/** Dinero: entero en céntimos (10,50 € → 1050). Nunca float. */
+/** Dinero: entero en céntimos (S/ 10.50 → 1050). Nunca float. */
 type Cents = number;
 
 /** Fecha civil ISO-8601 sin hora: "2026-07-28". */
 type ISODate = string;
 
-/** Código de moneda ISO 4217: "EUR". */
+/** Código de moneda ISO 4217: "PEN". */
 type Currency = string;
 
 

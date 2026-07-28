@@ -2,13 +2,13 @@
 // Copia fiel de la sección 5 de CLAUDE.md; cualquier cambio se acuerda
 // primero en ese documento.
 
-/** Dinero: entero en céntimos (10,50 € → 1050). Nunca float. */
+/** Dinero: entero en céntimos (S/ 10.50 → 1050). Nunca float. */
 export type Cents = number;
 
 /** Fecha civil ISO-8601 sin hora: "2026-07-28". */
 export type ISODate = string;
 
-/** Código de moneda ISO 4217: "EUR". */
+/** Código de moneda ISO 4217: "PEN". */
 export type Currency = string;
 
 export interface GoalEngineRequest {

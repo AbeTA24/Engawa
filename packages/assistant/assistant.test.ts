@@ -31,7 +31,7 @@ const extraccionPlan: ExtractionResult = {
   extraction: {
     query: 'plan',
     goalName: 'Viaje a Japón',
-    targetAmount: '1.200', // transcripción literal de "1.200 €"
+    targetAmount: '1.200', // transcripción literal de "1.200 soles"
     targetDate: '2027-07-01',
   },
 };
@@ -40,7 +40,7 @@ describe('parse: transcripción literal → céntimos (sin aritmética)', () => 
   it.each([
     ['1.200', 120000],
     ['1200,50', 120050],
-    ['300 euros', 30000],
+    ['300 soles', 30000],
     ['0,05', 5],
     ['1.234.567,89', 123456789],
   ])('%s → %d', (raw, cents) => {
@@ -54,12 +54,13 @@ describe('parse: transcripción literal → céntimos (sin aritmética)', () => 
 
 describe('format: céntimos → texto solo en el borde de presentación', () => {
   it.each([
-    [120000, '1.200,00 €'],
-    [5455, '54,55 €'],
-    [5, '0,05 €'],
-    [240000, '2.400,00 €'],
+    [120000, 'S/ 1,200.00'],
+    [5455, 'S/ 54.55'],
+    [5, 'S/ 0.05'],
+    [240000, 'S/ 2,400.00'],
+    [136364, 'S/ 1,363.64'],
   ])('%d → %s', (cents, text) => {
-    expect(formatCents(cents, 'EUR')).toBe(text);
+    expect(formatCents(cents, 'PEN')).toBe(text);
   });
 });
 
@@ -75,10 +76,10 @@ describe('assistant: flujo completo contra el motor real', () => {
       }),
     });
 
-    const { text } = await assistant.handle('Quiero ahorrar 1.200 € para un viaje a Japón antes de julio de 2027', '2026-08-01');
+    const { text } = await assistant.handle('Quiero ahorrar 1.200 soles para un viaje a Japón antes de julio de 2027', '2026-08-01');
 
-    // Valores de la tabla de casos del goal-engine: 1.200 € / 12 aportes.
-    expect(text).toContain('100,00 €');
+    // Valores de la tabla de casos del goal-engine: S/ 1,200.00 / 12 aportes.
+    expect(text).toContain('S/ 100.00');
     expect(text).toContain('12');
     expect(text).toContain('1 de julio de 2027');
     expect(text).toContain('Viaje a Japón');
@@ -95,14 +96,14 @@ describe('assistant: flujo completo contra el motor real', () => {
     const assistant = new Assistant({
       llm: fakeLlm({
         extract: extraccionPlan,
-        narrate: 'Con unos 95 € al mes llegás cómodo a tu meta.', // dígitos inventados por el LLM
+        narrate: 'Con unos 95 soles al mes llegás cómodo a tu meta.', // dígitos inventados por el LLM
       }),
     });
 
     const { text } = await assistant.handle('…', '2026-08-01');
 
     expect(text).not.toContain('95');
-    expect(text).toContain('100,00 €'); // el fallback determinista usa la cifra real del motor
+    expect(text).toContain('S/ 100.00'); // el fallback determinista usa la cifra real del motor
   });
 
   it('una narración con placeholders inexistentes se descarta', async () => {
@@ -113,7 +114,7 @@ describe('assistant: flujo completo contra el motor real', () => {
     const { text } = await assistant.handle('…', '2026-08-01');
 
     expect(text).not.toContain('montoInventado');
-    expect(text).toContain('100,00 €');
+    expect(text).toContain('S/ 100.00');
   });
 
   it('si el LLM narrador falla, el fallback determinista responde igual', async () => {
@@ -123,7 +124,7 @@ describe('assistant: flujo completo contra el motor real', () => {
 
     const { text } = await assistant.handle('…', '2026-08-01');
 
-    expect(text).toContain('100,00 €');
+    expect(text).toContain('S/ 100.00');
     expect(text).toContain('Viaje a Japón');
   });
 
@@ -140,7 +141,7 @@ describe('assistant: flujo completo contra el motor real', () => {
       query: { kind: 'plan' },
       goal: { name: 'Viaje a Japón', targetAmount: 120000, currentAmount: 0, targetDate: '2027-07-01' },
       asOf: '2026-08-01',
-      currency: 'EUR',
+      currency: 'PEN',
     });
   });
 
@@ -164,7 +165,7 @@ describe('assistant: flujo completo contra el motor real', () => {
   it('una aclaración del LLM con dígitos se reemplaza por la genérica', async () => {
     const assistant = new Assistant({
       llm: fakeLlm({
-        extract: { kind: 'clarification', question: '¿Tu meta es de unos 5000 €?' },
+        extract: { kind: 'clarification', question: '¿Tu meta es de unos 5000 soles?' },
       }),
     });
 
@@ -180,7 +181,7 @@ describe('buildRequest: validación determinista de la extracción', () => {
     const result = buildRequest(
       { query: 'plan', goalName: 'Meta', targetAmount: 'mil doscientos', targetDate: '2027-07-01' },
       '2026-08-01',
-      'EUR',
+      'PEN',
     );
     expect(result.kind).toBe('clarification');
   });
@@ -196,7 +197,7 @@ describe('buildRequest: validación determinista de la extracción', () => {
         contribution: { amount: '54,55', frequency: 'monthly' },
       },
       '2026-09-01',
-      'EUR',
+      'PEN',
     );
     expect(result).toEqual({
       kind: 'request',
@@ -210,7 +211,7 @@ describe('buildRequest: validación determinista de la extracción', () => {
           contribution: { amount: 5455, frequency: 'monthly' },
         },
         asOf: '2026-09-01',
-        currency: 'EUR',
+        currency: 'PEN',
       },
     });
   });

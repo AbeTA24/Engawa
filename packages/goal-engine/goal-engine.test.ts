@@ -3,7 +3,7 @@ import { evaluateGoal, type GoalEngineRequest } from './src/index.js';
 
 // Convenciones que estos tests fijan (verificables a mano):
 //
-// - Todos los importes en céntimos enteros: 1200,00 € → 120000.
+// - Todos los importes en céntimos enteros: S/ 1,200.00 → 120000.
 // - Aportes mensuales: el primero cae en startDate (o asOf si se omite) y
 //   luego el mismo día de cada mes. Cuentan los aportes con fecha ≤ targetDate.
 //   Ej.: de 2026-08-01 a 2027-07-01 inclusive hay 12 aportes.
@@ -17,12 +17,12 @@ import { evaluateGoal, type GoalEngineRequest } from './src/index.js';
 
 const base = {
   asOf: '2026-08-01',
-  currency: 'EUR',
+  currency: 'PEN',
 } as const;
 
 const meta = (over: Partial<GoalEngineRequest['goal']>): GoalEngineRequest['goal'] => ({
   name: 'Viaje a Japón',
-  targetAmount: 120000, // 1.200,00 €
+  targetAmount: 120000, // S/ 1,200.00
   currentAmount: 0,
   targetDate: '2027-07-01',
   ...over,
@@ -30,8 +30,8 @@ const meta = (over: Partial<GoalEngineRequest['goal']>): GoalEngineRequest['goal
 
 describe('goal-engine: feasibility', () => {
   it('meta alcanzable con holgura', () => {
-    // A mano: 12 aportes de 200,00 € = 2.400,00 € frente a una meta de
-    // 1.200,00 € → sobra exactamente 1.200,00 €.
+    // A mano: 12 aportes de S/ 200.00 = S/ 2,400.00 frente a una meta de
+    // S/ 1,200.00 → sobra exactamente S/ 1,200.00.
     const result = evaluateGoal({
       ...base,
       query: { kind: 'feasibility' },
@@ -43,14 +43,14 @@ describe('goal-engine: feasibility', () => {
     expect(result).toEqual({
       kind: 'feasibility',
       feasible: true,
-      projectedAmount: 240000, // 2.400,00 €
+      projectedAmount: 240000, // S/ 2,400.00
       shortfall: 0,
-      surplus: 120000, // 1.200,00 €
+      surplus: 120000, // S/ 1,200.00
     });
   });
 
   it('meta alcanzable justa, sin margen', () => {
-    // A mano: 12 aportes de 100,00 € = 1.200,00 € exactos.
+    // A mano: 12 aportes de S/ 100.00 = S/ 1,200.00 exactos.
     const result = evaluateGoal({
       ...base,
       query: { kind: 'feasibility' },
@@ -62,14 +62,14 @@ describe('goal-engine: feasibility', () => {
     expect(result).toEqual({
       kind: 'feasibility',
       feasible: true,
-      projectedAmount: 120000, // 1.200,00 € justos
+      projectedAmount: 120000, // S/ 1,200.00 justos
       shortfall: 0,
       surplus: 0,
     });
   });
 
   it('meta imposible en el plazo', () => {
-    // A mano: 12 aportes de 50,00 € = 600,00 € → faltan 600,00 €.
+    // A mano: 12 aportes de S/ 50.00 = S/ 600.00 → faltan S/ 600.00.
     const result = evaluateGoal({
       ...base,
       query: { kind: 'feasibility' },
@@ -81,8 +81,8 @@ describe('goal-engine: feasibility', () => {
     expect(result).toEqual({
       kind: 'feasibility',
       feasible: false,
-      projectedAmount: 60000, // 600,00 €
-      shortfall: 60000, // 600,00 €
+      projectedAmount: 60000, // S/ 600.00
+      shortfall: 60000, // S/ 600.00
       surplus: 0,
     });
   });
@@ -114,7 +114,7 @@ describe('goal-engine: ingreso irregular con alta volatilidad', () => {
   // simula un mes excelente seguido de tres meses casi nulos.
 
   it('recalculo inicial: sin ahorro previo', () => {
-    // A mano: 1.200,00 € entre 12 aportes (ago 2026 → jul 2027) = 100,00 €/mes.
+    // A mano: S/ 1,200.00 entre 12 aportes (ago 2026 → jul 2027) = S/ 100.00 al mes.
     const result = evaluateGoal({
       ...base,
       query: { kind: 'plan' },
@@ -123,17 +123,17 @@ describe('goal-engine: ingreso irregular con alta volatilidad', () => {
 
     expect(result).toEqual({
       kind: 'plan',
-      requiredContribution: 10000, // 100,00 €
+      requiredContribution: 10000, // S/ 100.00
       installments: 12,
       finalInstallment: 10000,
       completionDate: '2027-07-01',
     });
   });
 
-  it('recalculo tras un mes excelente: aportó 600,00 € de golpe', () => {
-    // A mano: restan 600,00 € entre 11 aportes (sep 2026 → jul 2027).
-    // 60000 / 11 = 5454,54… → ceil = 5455 (54,55 €).
-    // Último aporte: 60000 − 10 × 5455 = 5450 (54,50 €).
+  it('recalculo tras un mes excelente: aportó S/ 600.00 de golpe', () => {
+    // A mano: restan S/ 600.00 entre 11 aportes (sep 2026 → jul 2027).
+    // 60000 / 11 = 5454,54… → ceil = 5455 (S/ 54.55).
+    // Último aporte: 60000 − 10 × 5455 = 5450 (S/ 54.50).
     // Comprobación: 10 × 5455 + 5450 = 60000 exactos.
     const result = evaluateGoal({
       ...base,
@@ -144,16 +144,16 @@ describe('goal-engine: ingreso irregular con alta volatilidad', () => {
 
     expect(result).toEqual({
       kind: 'plan',
-      requiredContribution: 5455, // 54,55 €
+      requiredContribution: 5455, // S/ 54.55
       installments: 11,
-      finalInstallment: 5450, // 54,50 €
+      finalInstallment: 5450, // S/ 54.50
       completionDate: '2027-07-01',
     });
   });
 
-  it('recalculo tras tres meses malos: solo sumó 50,00 € más', () => {
-    // A mano: restan 550,00 € entre 8 aportes (dic 2026 → jul 2027).
-    // 55000 / 8 = 6875 exactos (68,75 €).
+  it('recalculo tras tres meses malos: solo sumó S/ 50.00 más', () => {
+    // A mano: restan S/ 550.00 entre 8 aportes (dic 2026 → jul 2027).
+    // 55000 / 8 = 6875 exactos (S/ 68.75).
     const result = evaluateGoal({
       ...base,
       asOf: '2026-12-01',
@@ -163,7 +163,7 @@ describe('goal-engine: ingreso irregular con alta volatilidad', () => {
 
     expect(result).toEqual({
       kind: 'plan',
-      requiredContribution: 6875, // 68,75 €
+      requiredContribution: 6875, // S/ 68.75
       installments: 8,
       finalInstallment: 6875,
       completionDate: '2027-07-01',

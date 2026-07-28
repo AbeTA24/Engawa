@@ -1,15 +1,18 @@
 // Borde de presentación (CLAUDE.md §4): único lugar donde los céntimos se
 // vuelven texto legible. Por manipulación de strings, sin floats.
+// Convención de soles peruanos: "S/ 1,363.64" — símbolo antes del monto con
+// un espacio, coma como separador de miles, punto como decimal.
 
 import type { Cents, Currency, ISODate } from 'goal-engine';
 
-/** 120050 → "1.200,50 €" · 5 → "0,05 €" */
+const SYMBOLS: Record<string, string> = { PEN: 'S/' };
+
+/** 136364 → "S/ 1,363.64" · 5 → "S/ 0.05" */
 export function formatCents(cents: Cents, currency: Currency): string {
   const digits = String(cents).padStart(3, '0');
-  const euros = digits.slice(0, -2).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  const units = digits.slice(0, -2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const decimals = digits.slice(-2);
-  const symbol = currency === 'EUR' ? '€' : currency;
-  return `${euros},${decimals} ${symbol}`;
+  return `${SYMBOLS[currency] ?? currency} ${units}.${decimals}`;
 }
 
 const MESES = [
