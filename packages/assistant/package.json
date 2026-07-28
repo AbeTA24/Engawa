@@ -1,0 +1,10 @@
+{
+  "name": "assistant",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.110.0",
+    "goal-engine": "*"
+  }
+}
