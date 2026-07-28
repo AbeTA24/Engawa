@@ -63,7 +63,7 @@ export class AnthropicLlmClient implements LlmClient {
     this.model = options.model ?? 'claude-opus-5';
   }
 
-  async extract(utterance: string): Promise<ExtractionResult> {
+  async extract(utterance: string, asOf: string): Promise<ExtractionResult> {
     const response = await this.client.beta.messages.create({
       model: this.model,
       max_tokens: 2048,
@@ -72,7 +72,7 @@ export class AnthropicLlmClient implements LlmClient {
       system: EXTRACTION_SYSTEM,
       tools: [EXTRACTION_TOOL, CLARIFICATION_TOOL],
       tool_choice: { type: 'any' },
-      messages: [{ role: 'user', content: utterance }],
+      messages: [{ role: 'user', content: `Hoy es ${asOf}.\n\n${utterance}` }],
     } as Anthropic.Beta.MessageCreateParamsNonStreaming);
 
     if (response.stop_reason === 'refusal') {

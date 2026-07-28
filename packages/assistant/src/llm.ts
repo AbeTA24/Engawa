@@ -40,7 +40,8 @@ export interface NarrationContext {
 }
 
 export interface LlmClient {
-  extract(utterance: string): Promise<ExtractionResult>;
+  /** asOf es el "hoy" conversacional: ancla fechas relativas ("en tres años"). */
+  extract(utterance: string, asOf: ISODate): Promise<ExtractionResult>;
   /** Devuelve texto con {{placeholder}}; prohibido escribir dígitos. */
   narrate(context: NarrationContext): Promise<string>;
 }

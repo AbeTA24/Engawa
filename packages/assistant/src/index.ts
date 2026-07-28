@@ -96,7 +96,7 @@ export class Assistant {
   }
 
   async handle(utterance: string, asOf: ISODate): Promise<{ text: string }> {
-    const extracted = await this.llm.extract(utterance);
+    const extracted = await this.llm.extract(utterance, asOf);
     if (extracted.kind === 'clarification') {
       // La pregunta viene del LLM: si trae dígitos, se descarta (§3).
       return { text: /\d/.test(extracted.question) ? GENERIC_CLARIFICATION : extracted.question };

@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "test": "vitest run",
+    "test:evals:live": "LIVE_EVALS=1 vitest run packages/assistant/assistant.evals.live.test.ts",
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
