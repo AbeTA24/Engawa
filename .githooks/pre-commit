@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Guardia de pureza de packages/goal-engine (CLAUDE.md §2): matemática pura,
+# sin SDKs de LLM y sin acceso a red. Falla el commit si algún archivo staged
+# dentro de packages/goal-engine importa un módulo prohibido o usa una API de
+# red global. Revisa el contenido staged (git show :file), no el working tree.
+set -euo pipefail
+
+files=$(git diff --cached --name-only --diff-filter=ACMR -- 'packages/goal-engine/')
+[ -z "$files" ] && exit 0
+
+# SDKs de LLM (el specifier del import debe empezar por uno de estos paquetes)
+llm_pkgs="@anthropic-ai|anthropic|openai|@openai|@google/genai|@google/generative-ai|@mistralai|mistralai|cohere|cohere-ai|@aws-sdk/client-bedrock|@aws-sdk/client-bedrock-runtime|groq-sdk|together-ai|replicate|ollama|langchain|@langchain|llamaindex|@huggingface/inference"
+
+# Clientes/módulos de red (idem)
+net_pkgs="axios|node-fetch|undici|got|ky|superagent|ws|socket\\.io|socket\\.io-client|http|https|http2|net|tls|dns|dgram|node:http|node:https|node:http2|node:net|node:tls|node:dns|node:dgram"
+
+# import ... from 'x' | import 'x' | import('x') | require('x'),
+# con el paquete exacto o un subpath suyo ('@anthropic-ai/sdk', 'openai/helpers').
+import_re="(from[[:space:]]+|import[[:space:]]+|import[[:space:]]*\\(|require[[:space:]]*\\()[\"'](${llm_pkgs}|${net_pkgs})(/[^\"']*)?[\"']"
+
+# APIs de red globales, disponibles sin import
+global_re="(^|[^.[:alnum:]_])(fetch[[:space:]]*\\(|XMLHttpRequest|WebSocket|EventSource|sendBeacon)"
+
+status=0
+while IFS= read -r f; do
+  hits=$(git show ":$f" | grep -nE "$import_re|$global_re" || true)
+  if [ -n "$hits" ]; then
+    status=1
+    echo "✗ $f viola la pureza de goal-engine (CLAUDE.md §2):" >&2
+    echo "$hits" | sed 's/^/    línea /' >&2
+  fi
+done <<< "$files"
+
+if [ "$status" -ne 0 ]; then
+  echo >&2
+  echo "packages/goal-engine debe ser matemática pura: sin SDKs de LLM, sin red, sin I/O." >&2
+  echo "Si el cambio es legítimo, primero se discute y se actualiza CLAUDE.md (§6)." >&2
+fi
+exit "$status"

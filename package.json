@@ -5,7 +5,8 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
     "vitest": "^3.0.0"
